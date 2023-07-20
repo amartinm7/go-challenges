@@ -1,0 +1,109 @@
+version: '3.9'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.1.2
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - network1
+      - network2
+      - network3
+
+  kafka:
+    image: confluentinc/cp-kafka:7.1.2
+    ports:
+      - "9092:9092"
+    links:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: '1'
+      KAFKA_LOG_RETENTION_MS: 20000
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 2000
+      KAFKA_MIN_INSYNC_REPLICAS: '1'
+    networks:
+      - network1
+      - network2
+      - network3
+
+  database:
+    image: postgres:14.5
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_pass
+      POSTGRES_DB: learning_go_db
+    volumes:
+      # esto es para que el volumen sea persistente. si lo quitamos cada vez que se ejecuta se reconstruye cada vez que arrancamos docker
+      # - ./_deploy/docker_instance/temp/instance-postgres-db-data:/var/lib/postgresql/data
+      # copy the sql script to create tables
+      - ./db/migrations/01_create_tables.sql:/docker-entrypoint-initdb.d/01_create_tables.sql
+    networks:
+      - network1
+      - network2
+      - network3
+
+  myads1:
+    image: ms-ma-myads:latest
+    # build: .
+    environment:
+      POSTGRES_DB_HOST: database
+      POSTGRES_ENABLE_DATABASE: true
+      KAFKA_BROKERS: kafka:9092
+      KAFKA_CONSUMER_GROUP: any-consumer-group
+      KAFKA_CONSUMER_TOPIC: topic.test.1
+    ports:
+      - "8081:8000"
+    depends_on:
+      - kafka
+      - database
+    networks:
+      - network1
+
+  myads2:
+    image: ms-ma-myads:latest
+    # build: .
+    environment:
+      POSTGRES_DB_HOST: database
+      POSTGRES_ENABLE_DATABASE: true
+      KAFKA_BROKERS: kafka:9092
+      KAFKA_CONSUMER_GROUP: any-consumer-group
+      KAFKA_CONSUMER_TOPIC: topic.test.1
+    ports:
+      - "8082:8000"
+    depends_on:
+      - kafka
+      - database
+    networks:
+      - network2
+
+  myads3:
+    image: ms-ma-myads:latest
+    # build: .
+    environment:
+      POSTGRES_DB_HOST: database
+      POSTGRES_ENABLE_DATABASE: true
+      KAFKA_BROKERS: kafka:9092
+      KAFKA_CONSUMER_GROUP: any-consumer-group
+      KAFKA_CONSUMER_TOPIC: topic.test.1
+    ports:
+      - "8083:8000"
+    depends_on:
+      - kafka
+      - database
+    networks:
+      - network2
+
+networks:
+  network1:
+  network2:
+  network3:
+

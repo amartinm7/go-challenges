@@ -1,0 +1,38 @@
+{
+  "@id": "1e03c587-433b-4812-9510-7df61d747f76",
+  "published": "2017-11-28T17:29:33.827Z",
+  "schema": "http://schema.spain.advgo.net/events/milanuncios/ShippingBuyerOfferMade-Event.json/4.json#",
+  "@type": "ShippingBuyerOfferMade",
+  "actor": {
+    "@id": "sdrn:milanuncios:user:12345"
+  },
+  "provider": {
+    "@id": "milanuncios",
+    "channel": "other"
+  },
+  "action": "Create",
+  "payload": {
+    "@id": "6788372b-633a-484e-bc6d-c8d789a3217c",
+    "buyerId": "200619095",
+    "sellerId":  "200619095",
+    "adId":  "471298023",
+    "price": 1000,
+    "deliveryAddress": {
+      "fullName": "Daenerys Targaryen",
+      "firstName": "Daenerys",
+      "lastName": "Targaryen",
+      "line1": "Red Keep, 1",
+      "line2": "Maegor's Holdfast",
+      "zipCode": "24009",
+      "city": "King's Landing",
+      "province": "Leon",
+      "phoneNumber": "999999999"
+    },
+    "costs": {
+      "buyer": {
+        "shippingCost": 4.99,
+        "serviceFee": 2.45
+      }
+    }
+  }
+}
