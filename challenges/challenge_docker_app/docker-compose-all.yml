@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres:14.5
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_pass
+      POSTGRES_DB: learning_go_db
+    volumes:
+      # esto es para que el volumen sea persistente. si lo quitamos cada vez que se ejecuta se reconstruye cada vez que arrancamos docker_instance
+      - ./_deploy/docker_instance/temp/instance-postgres-db-data:/var/lib/postgresql/data
+      # copy the sql script to create tables
+      - ./_deploy/docker_instance/01_create_tables.sql:/docker_instance-entrypoint-initdb.d/01_create_tables.sql
+
+  myads:
+    # build: .
+    image: my-docker-app:latest
+    environment:
+      MYADS_DBHOST_REF: mysql
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
