@@ -1,0 +1,7 @@
+.idea
+*.iml
+
+# Mac
+.DS_Store
+out/
+/challenges/challenge_docker_app/_deploy/docker_instance/temp/*
