@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -49,7 +48,7 @@ func Execute() {
 		})
 	})
 
-	r.GET("/products", GetProducts)
+	r.GET("/product", GetProducts)
 
 	r.Run(":8000")
 }
