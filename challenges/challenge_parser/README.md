@@ -31,6 +31,8 @@ go run cmd/cli/main.go
 ```bash
 # build
 go build ./...
+# or
+go build -o ./bin ./...
 # or to generate a binary executable
 go build -o ./bin/main cmd/cli/main.go
 # setup grants
