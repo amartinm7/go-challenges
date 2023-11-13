@@ -20,5 +20,5 @@ func main() {
 	//https://dummyjson.com/products
 	var service = initService()
 	var products, _ = service.Execute()
-	fmt.Println(&products)
+	fmt.Println(products)
 }
